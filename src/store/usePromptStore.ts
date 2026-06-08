@@ -5,7 +5,6 @@ import {
   AspectRatioPreset,
   ExtraProperty,
   LmSettings,
-  ObjectColorPalette,
   PromptObject,
   Resolution,
 } from "../types/prompt";
@@ -14,6 +13,10 @@ import { ASPECT_RATIO_PRESETS } from "../utils/aspectRatios";
 
 interface PromptState {
   resolution: Resolution;
+  highLevelDescription: string;
+  aesthetics: string;
+  lighting: string;
+  photo: string;
   medium: string;
   colorPalette: string[];
   background: string;
@@ -31,6 +34,10 @@ interface PromptState {
   adjustWidth: (delta: number) => void;
   adjustHeight: (delta: number) => void;
   setAspectRatio: (preset: AspectRatioPreset) => void;
+  setHighLevelDescription: (text: string) => void;
+  setAesthetics: (text: string) => void;
+  setLighting: (text: string) => void;
+  setPhoto: (text: string) => void;
   setMedium: (m: string) => void;
   addGlobalColor: (hex: string) => void;
   removeGlobalColor: (index: number) => void;
@@ -49,7 +56,7 @@ interface PromptState {
   addExtraProp: (objectId: string) => void;
   updateExtraProp: (objectId: string, propId: string, patch: Partial<ExtraProperty>) => void;
   removeExtraProp: (objectId: string, propId: string) => void;
-  setObjectColorPalette: (objectId: string, palette: ObjectColorPalette | undefined) => void;
+  setObjectColorPalette: (objectId: string, palette: string[] | undefined) => void;
 
   setLmSettings: (s: LmSettings) => void;
   loadState: (state: ParsedPromptState) => void;
@@ -64,6 +71,10 @@ export const usePromptStore = create<PromptState>()(
   persist(
     (set) => ({
       resolution: DEFAULT_RESOLUTION,
+      highLevelDescription: "",
+      aesthetics: "",
+      lighting: "",
+      photo: "",
       medium: "",
       colorPalette: [],
       background: "",
@@ -83,6 +94,10 @@ export const usePromptStore = create<PromptState>()(
       adjustHeight: (delta) =>
         set((s) => ({ resolution: { ...s.resolution, height: Math.max(64, s.resolution.height + delta) } })),
       setAspectRatio: (preset) => set({ resolution: ASPECT_RATIO_PRESETS[preset] }),
+      setHighLevelDescription: (text) => set({ highLevelDescription: text }),
+      setAesthetics: (text) => set({ aesthetics: text }),
+      setLighting: (text) => set({ lighting: text }),
+      setPhoto: (text) => set({ photo: text }),
       setMedium: (m) => set({ medium: m }),
       addGlobalColor: (hex) => set((s) => ({ colorPalette: [...s.colorPalette, hex] })),
       removeGlobalColor: (index) =>
@@ -173,7 +188,20 @@ export const usePromptStore = create<PromptState>()(
 
       setLmSettings: (s) => set({ lmSettings: s }),
 
-      loadState: (state) => set(state),
+      loadState: (state) =>
+        set({
+          resolution: state.resolution,
+          highLevelDescription: state.highLevelDescription,
+          aesthetics: state.aesthetics,
+          lighting: state.lighting,
+          photo: state.photo,
+          medium: state.medium,
+          colorPalette: state.colorPalette,
+          background: state.background,
+          objects: state.objects,
+          selectedObjectId: null,
+          drawingObjectId: null,
+        }),
 
       setCanvasBgImage: (url) => set({ canvasBgImage: url }),
       setCanvasBgOpacity: (opacity) => set({ canvasBgOpacity: opacity }),
@@ -183,9 +211,8 @@ export const usePromptStore = create<PromptState>()(
       // Never persist the image data URL — it can be hundreds of KB and
       // the object URL becomes invalid across sessions anyway.
       partialize: (s) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { canvasBgImage, canvasBgOpacity, ...rest } = s;
-        void canvasBgImage;
-        void canvasBgOpacity;
         return rest;
       },
     },

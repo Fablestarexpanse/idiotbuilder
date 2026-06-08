@@ -1,11 +1,5 @@
 export type BoundingBox = [number, number, number, number];
 
-export interface ObjectColorPalette {
-  main: string;
-  secondary: string;
-  tertiary: string;
-}
-
 export interface ExtraProperty {
   id: string;
   key: string;
@@ -15,11 +9,15 @@ export interface ExtraProperty {
 export interface PromptObject {
   id: string;
   label: string;
-  type: "obj";
+  /** "obj" for regular elements; "text" for text localization (serializes to type:"obj" with TEXT: prefix in desc). */
+  type: "obj" | "text";
+  /** For text elements: the literal string to display. Serialized into desc as TEXT: 'content'. */
+  textContent?: string;
   zIndex: number;
   bbox: BoundingBox;
   desc: string;
-  colorPalette?: ObjectColorPalette;
+  /** Per-element color palette as hex strings (e.g. ["#FF0000", "#00FF00"]). */
+  colorPalette?: string[];
   extraProps: ExtraProperty[];
 }
 

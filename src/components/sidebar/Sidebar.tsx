@@ -2,6 +2,8 @@ import logo from "../../assets/logo.png";
 import { version } from "../../../package.json";
 import { ResolutionControl } from "./ResolutionControl";
 import { AspectRatioPresets } from "./AspectRatioPresets";
+import { HighLevelDescriptionInput } from "./HighLevelDescriptionInput";
+import { StyleDescriptionSection } from "./StyleDescriptionSection";
 import { MediumInput } from "./MediumInput";
 import { GlobalColorPalette } from "./GlobalColorPalette";
 import { BackgroundInput } from "./BackgroundInput";
@@ -25,6 +27,9 @@ export function Sidebar({ onOpenSettings, onOpenExport }: Props) {
         <ResolutionControl />
         <AspectRatioPresets />
         <div className="sidebar-divider" />
+        <HighLevelDescriptionInput />
+        <div className="sidebar-section-header">Style</div>
+        <StyleDescriptionSection />
         <MediumInput />
         <GlobalColorPalette />
         <div className="sidebar-divider" />

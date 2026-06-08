@@ -2,7 +2,7 @@ import { useState } from "react";
 import { save, open } from "@tauri-apps/plugin-dialog";
 import { writeTextFile, readTextFile } from "@tauri-apps/plugin-fs";
 import { usePromptStore } from "../../store/usePromptStore";
-import { buildJson } from "../../utils/jsonBuilder";
+import { buildIdeogramJson, parseIdeogramJson } from "../../utils/jsonBuilder";
 import "./JsonExport.css";
 
 interface Props {
@@ -14,6 +14,10 @@ export function JsonExport({ onClose }: Props) {
   const [saveError, setSaveError] = useState<string | null>(null);
 
   const resolution = usePromptStore((s) => s.resolution);
+  const highLevelDescription = usePromptStore((s) => s.highLevelDescription);
+  const aesthetics = usePromptStore((s) => s.aesthetics);
+  const lighting = usePromptStore((s) => s.lighting);
+  const photo = usePromptStore((s) => s.photo);
   const medium = usePromptStore((s) => s.medium);
   const colorPalette = usePromptStore((s) => s.colorPalette);
   const background = usePromptStore((s) => s.background);
@@ -21,15 +25,19 @@ export function JsonExport({ onClose }: Props) {
   const loadState = usePromptStore((s) => s.loadState);
 
   const json = JSON.stringify(
-    buildJson(resolution, medium, colorPalette, background, objects),
+    buildIdeogramJson(resolution, highLevelDescription, aesthetics, lighting, photo, medium, colorPalette, background, objects),
     null,
     2,
   );
 
   async function copy() {
-    await navigator.clipboard.writeText(json);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
+    try {
+      await navigator.clipboard.writeText(json);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch (e) {
+      setSaveError(String(e));
+    }
   }
 
   async function saveFile() {
@@ -55,25 +63,7 @@ export function JsonExport({ onClose }: Props) {
       });
       if (!path || Array.isArray(path)) return;
       const text = await readTextFile(path);
-      const data = JSON.parse(text);
-      // Parse resolution string "WxH"
-      const [w, h] = (data.resolution ?? "896x1152").split("x").map(Number);
-      loadState({
-        resolution: { width: w, height: h },
-        medium: data.medium ?? "",
-        colorPalette: data.color_palette ?? [],
-        background: data.compositional_deconstruction?.background ?? "",
-        objects: (data.compositional_deconstruction?.objects ?? []).map((o: Record<string, unknown>, idx: number) => ({
-          id: crypto.randomUUID(),
-          label: String(o.label ?? "obj"),
-          type: "obj" as const,
-          zIndex: Number(o["z-index"] ?? idx + 1),
-          bbox: (o.bbox as [number, number, number, number]) ?? [0, 0, w, h],
-          desc: String(o.desc ?? ""),
-          colorPalette: o.color_palette as { main: string; secondary: string; tertiary: string } | undefined,
-          extraProps: [],
-        })),
-      });
+      loadState(parseIdeogramJson(text));
       onClose();
     } catch (e) {
       setSaveError(String(e));

@@ -10,7 +10,7 @@ export function BboxInputs({ objectId }: Props) {
   const obj = usePromptStore((s) => s.objects.find((o) => o.id === objectId));
   const updateObject = usePromptStore((s) => s.updateObject);
   const drawingObjectId = usePromptStore((s) => s.drawingObjectId);
-  const startDrawing = usePromptStore((s) => s.startDrawing);
+  const selectAndDrawObject = usePromptStore((s) => s.selectAndDrawObject);
   const stopDrawing = usePromptStore((s) => s.stopDrawing);
 
   if (!obj) return null;
@@ -43,7 +43,7 @@ export function BboxInputs({ objectId }: Props) {
       </div>
       <button
         className={`draw-btn${isDrawing ? " active" : ""}`}
-        onClick={() => isDrawing ? stopDrawing() : startDrawing(objectId)}
+        onClick={() => isDrawing ? stopDrawing() : selectAndDrawObject(objectId)}
       >
         {isDrawing ? "Cancel drawing" : "Draw on canvas"}
       </button>

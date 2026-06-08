@@ -45,7 +45,9 @@ async fn rephrase(prompt: String, base_url: String, model: String) -> Result<Str
         .json(&body)
         .send()
         .await
-        .map_err(|e| e.to_string())?;
+        .map_err(|e| e.to_string())?
+        .error_for_status()
+        .map_err(|e| format!("LM Studio returned HTTP {}", e.status().map_or("error".to_string(), |s| s.to_string())))?;
 
     let chat: ChatResponse = response.json().await.map_err(|e| e.to_string())?;
 

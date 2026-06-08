@@ -6,7 +6,7 @@ import { SettingsModal } from "./components/shared/SettingsModal";
 import { JsonExport } from "./components/shared/JsonExport";
 import "./App.css";
 
-export default function App() {
+export function App() {
   const [showSettings, setShowSettings] = useState(false);
   const [showExport, setShowExport] = useState(false);
 

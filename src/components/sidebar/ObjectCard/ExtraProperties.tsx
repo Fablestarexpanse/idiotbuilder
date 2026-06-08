@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { usePromptStore } from "../../../store/usePromptStore";
-import { ColorSwatch } from "../../shared/ColorSwatch";
 import "./ExtraProperties.css";
 
 interface Props {
@@ -13,19 +12,8 @@ export function ExtraProperties({ objectId }: Props) {
   const addExtraProp = usePromptStore((s) => s.addExtraProp);
   const updateExtraProp = usePromptStore((s) => s.updateExtraProp);
   const removeExtraProp = usePromptStore((s) => s.removeExtraProp);
-  const setObjectColorPalette = usePromptStore((s) => s.setObjectColorPalette);
 
   if (!obj) return null;
-
-  function addColorPalette() {
-    if (!obj?.colorPalette) {
-      setObjectColorPalette(objectId, { main: "#000000", secondary: "#ffffff", tertiary: "#888888" });
-    }
-  }
-
-  function removeColorPalette() {
-    setObjectColorPalette(objectId, undefined);
-  }
 
   return (
     <div className="extra-props">
@@ -35,28 +23,6 @@ export function ExtraProperties({ objectId }: Props) {
 
       {open && (
         <div className="extra-props-body">
-          {obj.colorPalette && (
-            <div className="field">
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-                <label style={{ margin: 0 }}>Color Palette</label>
-                <button className="icon-btn danger" onClick={removeColorPalette}>✕</button>
-              </div>
-              <div className="obj-palette">
-                {(["main", "secondary", "tertiary"] as const).map((key) => (
-                  <div key={key} className="obj-palette-row">
-                    <span className="obj-palette-label">{key}</span>
-                    <ColorSwatch
-                      color={obj.colorPalette![key]}
-                      onChange={(c) => setObjectColorPalette(objectId, { ...obj.colorPalette!, [key]: c })}
-                      size={18}
-                    />
-                    <span className="obj-palette-hex">{obj.colorPalette![key]}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
           {obj.extraProps.map((ep) => (
             <div key={ep.id} className="extra-prop-row field">
               <input
@@ -78,9 +44,6 @@ export function ExtraProperties({ objectId }: Props) {
           ))}
 
           <div className="extra-props-actions">
-            {!obj.colorPalette && (
-              <button className="btn" onClick={addColorPalette}>+ color_palette</button>
-            )}
             <button className="btn" onClick={() => addExtraProp(objectId)}>+ custom prop</button>
           </div>
         </div>

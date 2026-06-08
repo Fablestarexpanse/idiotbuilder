@@ -56,7 +56,7 @@
   letter-spacing: 0.2px;
 }
 
-.object-z-badge {
+.object-type-badge {
   font-size: 10px;
   color: var(--text-dimmer);
   background: var(--bg);
@@ -65,6 +65,37 @@
   flex-shrink: 0;
   font-family: monospace;
   border: 1px solid var(--border);
+}
+
+.object-type-badge.text-type {
+  color: #a78bfa;
+  border-color: #4c3a7a;
+  background: #1e1330;
+}
+
+.type-toggle-btn {
+  width: 100%;
+  padding: 5px 4px;
+  border-radius: 5px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-dim);
+  font-size: 11px;
+  font-family: monospace;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  margin-top: 18px; /* align with label + input combo */
+}
+
+.type-toggle-btn:hover {
+  background: #2a2a2a;
+  color: var(--text);
+}
+
+.type-toggle-btn.active {
+  background: #1e1330;
+  color: #a78bfa;
+  border-color: #4c3a7a;
 }
 
 .object-card-header-right {
