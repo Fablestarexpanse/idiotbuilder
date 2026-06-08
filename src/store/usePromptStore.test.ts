@@ -2,10 +2,13 @@ import { describe, it, expect, beforeEach } from "vitest";
 import { usePromptStore } from "./usePromptStore";
 import { DEFAULT_LM_BASE_URL, DEFAULT_LM_MODEL } from "../utils/constants";
 
+const DEFAULT_WIDTH = 896;
+const DEFAULT_HEIGHT = 1152;
+
 /** Reset store to initial state before each test so tests are independent. */
 function resetStore() {
   usePromptStore.setState({
-    resolution: { width: 896, height: 1152 },
+    resolution: { width: DEFAULT_WIDTH, height: DEFAULT_HEIGHT },
     highLevelDescription: "",
     aesthetics: "",
     lighting: "",
@@ -271,10 +274,12 @@ describe("usePromptStore — LM settings", () => {
   });
 
   it("setLmSettings updates both fields", () => {
-    usePromptStore.getState().setLmSettings({ baseUrl: "http://example.com", model: "gpt-x" });
+    const newUrl = "http://example.com/v1/chat/completions";
+    const newModel = "gpt-x";
+    usePromptStore.getState().setLmSettings({ baseUrl: newUrl, model: newModel });
     const { lmSettings } = usePromptStore.getState();
-    expect(lmSettings.baseUrl).toBe("http://example.com");
-    expect(lmSettings.model).toBe("gpt-x");
+    expect(lmSettings.baseUrl).toBe(newUrl);
+    expect(lmSettings.model).toBe(newModel);
   });
 });
 

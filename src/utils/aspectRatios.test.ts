@@ -8,8 +8,9 @@ describe("ASPECT_RATIO_PRESETS", () => {
   });
 
   it("PRESET_LABELS matches the presets object keys", () => {
-    const presetKeys = Object.keys(ASPECT_RATIO_PRESETS).sort();
-    const labelKeys = [...PRESET_LABELS].sort();
+    const compare = (a: string, b: string) => a.localeCompare(b);
+    const presetKeys = Object.keys(ASPECT_RATIO_PRESETS).sort(compare);
+    const labelKeys = [...PRESET_LABELS].sort(compare);
     expect(labelKeys).toEqual(presetKeys);
   });
 

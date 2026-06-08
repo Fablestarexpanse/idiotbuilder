@@ -1,4 +1,5 @@
 import "@testing-library/jest-dom";
+import { vi } from "vitest";
 
 // Zustand's persist middleware writes to localStorage.
 // Provide a simple in-memory implementation for tests.
