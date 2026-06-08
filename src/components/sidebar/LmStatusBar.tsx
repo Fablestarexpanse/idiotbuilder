@@ -17,12 +17,13 @@ export function LmStatusBar({ onOpenSettings }: Props) {
   const [status, setStatus] = useState<Status>("checking");
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  async function check() {
+  async function checkConnectivity() {
     setStatus("checking");
     try {
       const models = await invoke<string[]>("list_models", { baseUrl: lmSettings.baseUrl });
       setStatus("connected");
-      // Auto-update stored model if the current one isn't loaded
+      // Auto-sync the stored model when the current one is no longer available.
+      // Note: this write is intentional — LmStatusBar owns the auto-detect side-effect.
       if (models.length > 0 && !models.includes(lmSettings.model)) {
         setLmSettings({ ...lmSettings, model: models[0] });
       }
@@ -32,8 +33,8 @@ export function LmStatusBar({ onOpenSettings }: Props) {
   }
 
   useEffect(() => {
-    check();
-    timerRef.current = setInterval(check, POLL_MS);
+    void checkConnectivity();
+    timerRef.current = setInterval(() => { void checkConnectivity(); }, POLL_MS);
     return () => { if (timerRef.current) clearInterval(timerRef.current); };
   }, [lmSettings.baseUrl]);
 
