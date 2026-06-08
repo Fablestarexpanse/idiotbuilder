@@ -53,10 +53,6 @@ function build(
 // ---------------------------------------------------------------------------
 
 describe("buildIdeogramJson — output structure", () => {
-  it("encodes resolution as WxH string", () => {
-    expect(build([]).resolution).toBe("896x1152");
-  });
-
   it("puts medium inside style_description", () => {
     const result = build([], { medium: "oil painting" });
     expect(result.style_description.medium).toBe("oil painting");

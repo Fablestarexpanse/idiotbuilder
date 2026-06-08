@@ -1,0 +1,56 @@
+.lm-status-bar {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 8px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s;
+  margin-bottom: 10px;
+}
+
+.lm-status-bar:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.lm-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  transition: background 0.4s;
+}
+
+.lm-dot--connected {
+  background: #4ade80;
+  box-shadow: 0 0 5px #4ade8088;
+}
+
+.lm-dot--disconnected {
+  background: #f87171;
+  box-shadow: 0 0 5px #f8717188;
+}
+
+.lm-dot--checking {
+  background: #facc15;
+  box-shadow: 0 0 5px #facc1588;
+  animation: lm-pulse 1s ease-in-out infinite;
+}
+
+@keyframes lm-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+.lm-model-name {
+  font-size: 11px;
+  font-family: monospace;
+  color: var(--text-dim);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}

@@ -70,6 +70,41 @@ async fn rephrase(
         .ok_or_else(|| "No response from LM Studio".into())
 }
 
+/// Fetch available model IDs from the LM Studio /v1/models endpoint.
+#[tauri::command]
+async fn list_models(base_url: String) -> Result<Vec<String>, String> {
+    let client = reqwest::Client::builder()
+        .timeout(Duration::from_secs(5))
+        .build()
+        .map_err(|e| e.to_string())?;
+
+    let mut parsed = reqwest::Url::parse(&base_url).map_err(|e| e.to_string())?;
+    parsed.set_path("/v1/models");
+    parsed.set_query(None);
+
+    #[derive(Deserialize)]
+    struct ModelEntry {
+        id: String,
+    }
+    #[derive(Deserialize)]
+    struct ModelsResponse {
+        data: Vec<ModelEntry>,
+    }
+
+    let resp: ModelsResponse = client
+        .get(parsed)
+        .send()
+        .await
+        .map_err(|e| e.to_string())?
+        .error_for_status()
+        .map_err(|e| e.to_string())?
+        .json()
+        .await
+        .map_err(|e| e.to_string())?;
+
+    Ok(resp.data.into_iter().map(|m| m.id).collect())
+}
+
 /// Ping the LM Studio models endpoint to check connectivity.
 /// Derives the /v1/models URL from the stored chat completions URL.
 /// Returns Ok(()) if reachable, Err(reason) if not.
@@ -103,7 +138,7 @@ pub fn run() {
         .plugin(tauri_plugin_store::Builder::default().build())
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_fs::init())
-        .invoke_handler(tauri::generate_handler![rephrase, ping_lm])
+        .invoke_handler(tauri::generate_handler![rephrase, ping_lm, list_models])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

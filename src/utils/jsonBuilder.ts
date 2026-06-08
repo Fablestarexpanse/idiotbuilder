@@ -27,7 +27,6 @@ interface IdeogramElement {
 }
 
 interface IdeogramOutput {
-  resolution: string;
   high_level_description: string;
   style_description: {
     aesthetics: string;
@@ -122,7 +121,6 @@ export function buildIdeogramJson(
   });
 
   return {
-    resolution: `${resolution.width}x${resolution.height}`,
     high_level_description: highLevelDescription,
     style_description: {
       aesthetics,

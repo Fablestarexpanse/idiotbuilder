@@ -1,5 +1,6 @@
 import logo from "../../assets/logo.png";
 import { version } from "../../../package.json";
+import { LmStatusBar } from "./LmStatusBar";
 import { ResolutionControl } from "./ResolutionControl";
 import { AspectRatioPresets } from "./AspectRatioPresets";
 import { HighLevelDescriptionInput } from "./HighLevelDescriptionInput";
@@ -8,7 +9,6 @@ import { MediumInput } from "./MediumInput";
 import { GlobalColorPalette } from "./GlobalColorPalette";
 import { BackgroundInput } from "./BackgroundInput";
 import { ObjectList } from "./ObjectList";
-import { LmStatus } from "../shared/LmStatus";
 import "./Sidebar.css";
 
 interface Props {
@@ -25,6 +25,7 @@ export function Sidebar({ onOpenSettings, onOpenExport }: Props) {
       </div>
 
       <div className="sidebar-body">
+        <LmStatusBar />
         <ResolutionControl />
         <AspectRatioPresets />
         <div className="sidebar-divider" />
@@ -40,7 +41,6 @@ export function Sidebar({ onOpenSettings, onOpenExport }: Props) {
       </div>
 
       <div className="sidebar-footer">
-        <LmStatus />
         <div className="footer-actions">
           <button className="footer-btn" title="Export JSON" onClick={onOpenExport}>↗ Export JSON</button>
           <button className="footer-btn" title="Settings" onClick={onOpenSettings}>⚙ Settings</button>
