@@ -7,7 +7,11 @@ type Status = "checking" | "connected" | "disconnected";
 
 const POLL_MS = 5000;
 
-export function LmStatusBar() {
+interface Props {
+  onOpenSettings: () => void;
+}
+
+export function LmStatusBar({ onOpenSettings }: Props) {
   const lmSettings = usePromptStore((s) => s.lmSettings);
   const setLmSettings = usePromptStore((s) => s.setLmSettings);
   const [status, setStatus] = useState<Status>("checking");
@@ -36,7 +40,7 @@ export function LmStatusBar() {
   const modelName = lmSettings.model || "—";
 
   return (
-    <div className="lm-status-bar" title="Click to recheck" onClick={check}>
+    <div className="lm-status-bar" title="Open LM Studio settings" onClick={onOpenSettings}>
       <span className={`lm-dot lm-dot--${status}`} />
       <span className="lm-model-name" title={modelName}>{modelName}</span>
     </div>

@@ -1,6 +1,6 @@
 .json-panel {
-  width: 240px;
-  min-width: 240px;
+  width: 280px;
+  min-width: 280px;
   background: var(--sidebar-bg);
   border-left: 1px solid var(--border);
   display: flex;
@@ -42,28 +42,73 @@
   color: var(--accent);
 }
 
-.json-panel-body {
+.json-parse-error {
+  font-size: 10px;
+  color: #f87171;
+  font-family: monospace;
+}
+
+/* ── Editor area ── */
+.json-editor {
   flex: 1;
-  overflow-y: auto;
-  padding: 12px;
-  margin: 0;
-  font-family: "Consolas", "Fira Code", monospace;
+  display: flex;
+  overflow: hidden;
+  font-family: "Consolas", "Fira Code", "Menlo", monospace;
   font-size: 11px;
   line-height: 1.6;
+}
+
+/* Line-number gutter */
+.json-gutter {
+  flex-shrink: 0;
+  width: 38px;
+  overflow: hidden; /* scrollTop is set manually via JS */
+  background: #141414;
+  border-right: 1px solid var(--border);
+  padding: 12px 0;
+  user-select: none;
+}
+
+.json-line-number {
+  display: block;
+  text-align: right;
+  padding: 0 8px 0 0;
+  color: #444;
+  line-height: 1.6;
+  font-size: 10px;
+}
+
+/* Editable textarea */
+.json-textarea {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  resize: none;
   color: var(--text);
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  padding: 12px 10px;
   white-space: pre;
-  word-break: normal;
+  overflow: auto;
+  caret-color: var(--accent);
 }
 
-.json-panel-body::-webkit-scrollbar {
+.json-textarea--error {
+  background: rgba(248, 113, 113, 0.04);
+}
+
+.json-textarea::-webkit-scrollbar {
   width: 4px;
+  height: 4px;
 }
 
-.json-panel-body::-webkit-scrollbar-track {
+.json-textarea::-webkit-scrollbar-track {
   background: transparent;
 }
 
-.json-panel-body::-webkit-scrollbar-thumb {
+.json-textarea::-webkit-scrollbar-thumb {
   background: var(--border);
   border-radius: 2px;
 }

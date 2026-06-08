@@ -25,7 +25,7 @@ export function Sidebar({ onOpenSettings, onOpenExport }: Props) {
       </div>
 
       <div className="sidebar-body">
-        <LmStatusBar />
+        <LmStatusBar onOpenSettings={onOpenSettings} />
         <ResolutionControl />
         <AspectRatioPresets />
         <div className="sidebar-divider" />
