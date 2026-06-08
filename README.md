@@ -4,8 +4,6 @@
 
 A visual JSON prompt builder for [Ideogram](https://ideogram.ai)'s compositional deconstruction feature. Draw bounding boxes on a canvas, assign z-indices, descriptions, and colour palettes to each element, then export a structured JSON prompt — ready to paste into Ideogram.
 
-![Idiotbuilder screenshot](docs/screenshot.png)
-
 ---
 
 ## Features
