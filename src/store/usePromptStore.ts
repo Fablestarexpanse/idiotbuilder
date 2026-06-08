@@ -9,6 +9,7 @@ import {
   PromptObject,
   Resolution,
 } from "../types/prompt";
+import { ParsedPromptState } from "../utils/jsonBuilder";
 import { ASPECT_RATIO_PRESETS } from "../utils/aspectRatios";
 
 interface PromptState {
@@ -20,6 +21,11 @@ interface PromptState {
   selectedObjectId: string | null;
   drawingObjectId: string | null;
   lmSettings: LmSettings;
+
+  /** Object URL for the canvas reference image (not persisted). */
+  canvasBgImage: string | null;
+  /** Opacity of the canvas reference image, 0–1. */
+  canvasBgOpacity: number;
 
   setResolution: (r: Resolution) => void;
   adjustWidth: (delta: number) => void;
@@ -36,7 +42,8 @@ interface PromptState {
   updateObject: (id: string, patch: Partial<Omit<PromptObject, "id">>) => void;
   reorderObject: (id: string, direction: "up" | "down") => void;
   selectObject: (id: string | null) => void;
-  startDrawing: (id: string) => void;
+  /** Selects the object AND enters draw mode — both selectedObjectId and drawingObjectId are set. */
+  selectAndDrawObject: (id: string) => void;
   stopDrawing: () => void;
 
   addExtraProp: (objectId: string) => void;
@@ -45,7 +52,10 @@ interface PromptState {
   setObjectColorPalette: (objectId: string, palette: ObjectColorPalette | undefined) => void;
 
   setLmSettings: (s: LmSettings) => void;
-  loadState: (state: Partial<PromptState>) => void;
+  loadState: (state: ParsedPromptState) => void;
+
+  setCanvasBgImage: (url: string | null) => void;
+  setCanvasBgOpacity: (opacity: number) => void;
 }
 
 const DEFAULT_RESOLUTION: Resolution = { width: 896, height: 1152 };
@@ -60,6 +70,8 @@ export const usePromptStore = create<PromptState>()(
       objects: [],
       selectedObjectId: null,
       drawingObjectId: null,
+      canvasBgImage: null,
+      canvasBgOpacity: 0.4,
       lmSettings: {
         baseUrl: "http://localhost:1234/v1/chat/completions",
         model: "local-model",
@@ -119,7 +131,7 @@ export const usePromptStore = create<PromptState>()(
         }),
 
       selectObject: (id) => set({ selectedObjectId: id }),
-      startDrawing: (id) => set({ drawingObjectId: id, selectedObjectId: id }),
+      selectAndDrawObject: (id) => set({ drawingObjectId: id, selectedObjectId: id }),
       stopDrawing: () => set({ drawingObjectId: null }),
 
       addExtraProp: (objectId) =>
@@ -162,7 +174,20 @@ export const usePromptStore = create<PromptState>()(
       setLmSettings: (s) => set({ lmSettings: s }),
 
       loadState: (state) => set(state),
+
+      setCanvasBgImage: (url) => set({ canvasBgImage: url }),
+      setCanvasBgOpacity: (opacity) => set({ canvasBgOpacity: opacity }),
     }),
-    { name: "idiotbuilder-prompt" },
+    {
+      name: "idiotbuilder-prompt",
+      // Never persist the image data URL — it can be hundreds of KB and
+      // the object URL becomes invalid across sessions anyway.
+      partialize: (s) => {
+        const { canvasBgImage, canvasBgOpacity, ...rest } = s;
+        void canvasBgImage;
+        void canvasBgOpacity;
+        return rest;
+      },
+    },
   ),
 );

@@ -87,8 +87,8 @@ describe("buildIdeogramJson", () => {
   it("inlines extra props with non-empty keys", () => {
     const obj = makeObject({
       extraProps: [
-        { key: "mood", value: "dramatic" },
-        { key: "  ", value: "ignored" }, // whitespace-only key — should be skipped
+        { id: "p1", key: "mood", value: "dramatic" },
+        { id: "p2", key: "  ", value: "ignored" }, // whitespace-only key — should be skipped
       ],
     });
     const result = buildIdeogramJson(RES, "", [], "", [obj]);
