@@ -1,0 +1,56 @@
+.canvas-panel {
+  flex: 1;
+  background: #1a1a1a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.canvas-frame {
+  position: relative;
+  background: #c0c0c0;
+  box-shadow: 0 0 0 1px #777, 0 8px 40px rgba(0, 0, 0, 0.7);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+/* Dot-matrix grid */
+.canvas-frame::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, #999 1px, transparent 1px);
+  background-size: 20px 20px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.bbox-svg {
+  position: absolute;
+  inset: 0;
+  pointer-events: all;
+  z-index: 1;
+}
+
+.draw-canvas {
+  position: absolute;
+  inset: 0;
+  pointer-events: all;
+  z-index: 2;
+}
+
+.canvas-resolution-label {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  color: #555;
+  font-family: monospace;
+  pointer-events: none;
+  background: rgba(26, 26, 26, 0.7);
+  padding: 2px 8px;
+  border-radius: 3px;
+}

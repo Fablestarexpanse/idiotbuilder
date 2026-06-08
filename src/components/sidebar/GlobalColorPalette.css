@@ -1,0 +1,20 @@
+.global-palette-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.add-color-btn {
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px dashed var(--border);
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 11px;
+}
+
+.add-color-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}

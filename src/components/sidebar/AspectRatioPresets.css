@@ -1,0 +1,26 @@
+.aspect-presets-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.aspect-btn {
+  padding: 3px 7px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-dim);
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.aspect-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.aspect-btn.active {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+}

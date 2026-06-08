@@ -1,0 +1,107 @@
+.object-card {
+  border-radius: 8px;
+  background: var(--panel-bg);
+  cursor: pointer;
+  border: 1px solid var(--border);
+  transition: box-shadow 0.15s, border-color 0.15s;
+  overflow: hidden;
+}
+
+.object-card:hover {
+  border-color: #555;
+}
+
+.object-card.selected {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+/* ── Header ── */
+.object-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  background: rgba(255,255,255,0.03);
+}
+
+.object-color-strip {
+  width: 3px;
+  height: 28px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.object-card-header-left {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex: 1;
+  min-width: 0;
+}
+
+.object-number {
+  font-size: 10px;
+  color: var(--text-dimmer);
+  flex-shrink: 0;
+  width: 14px;
+}
+
+.object-label-preview {
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: 0.2px;
+}
+
+.object-z-badge {
+  font-size: 10px;
+  color: var(--text-dimmer);
+  background: var(--bg);
+  padding: 2px 6px;
+  border-radius: 10px;
+  flex-shrink: 0;
+  font-family: monospace;
+  border: 1px solid var(--border);
+}
+
+.object-card-header-right {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  flex-shrink: 0;
+}
+
+/* ── Body ── */
+.object-card-body {
+  padding: 12px 10px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-top: 1px solid var(--border);
+}
+
+/* Row that puts label + type side by side */
+.object-field-row {
+  display: flex;
+  gap: 8px;
+}
+
+.object-field-row .field {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+/* z-index inline row */
+.object-meta-row {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+}
+
+.object-meta-row .field {
+  flex: 1;
+  margin-bottom: 0;
+}

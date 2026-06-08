@@ -1,0 +1,38 @@
+.bbox-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 4px;
+  margin-bottom: 6px;
+}
+
+.bbox-inputs input {
+  text-align: center;
+  padding: 4px 2px;
+  -moz-appearance: textfield;
+}
+
+.bbox-inputs input::-webkit-outer-spin-button,
+.bbox-inputs input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+.draw-btn {
+  width: 100%;
+  padding: 6px;
+  border-radius: 5px;
+  border: 1px solid var(--accent);
+  background: transparent;
+  color: var(--accent);
+  font-size: 11px;
+  letter-spacing: 0.3px;
+  transition: background 0.15s, color 0.15s;
+}
+
+.draw-btn:hover {
+  background: rgba(91, 141, 239, 0.12);
+}
+
+.draw-btn.active {
+  background: var(--accent);
+  color: #fff;
+}

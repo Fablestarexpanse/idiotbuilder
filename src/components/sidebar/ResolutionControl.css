@@ -1,0 +1,36 @@
+.resolution-control {}
+
+.resolution-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.resolution-axis {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex: 1;
+}
+
+.resolution-axis input {
+  text-align: center;
+  padding: 3px 4px;
+  -moz-appearance: textfield;
+}
+
+.resolution-axis input::-webkit-outer-spin-button,
+.resolution-axis input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+.resolution-x {
+  color: var(--text-dim);
+  font-size: 11px;
+}
+
+.resolution-preset-label {
+  margin-top: 4px;
+  font-size: 10px;
+  color: var(--accent);
+}

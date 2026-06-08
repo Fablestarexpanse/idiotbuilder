@@ -1,0 +1,28 @@
+.rephrase-btn {
+  padding: 2px 7px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--accent);
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.rephrase-btn:hover:not(:disabled) {
+  border-color: var(--accent);
+  background: rgba(91, 141, 239, 0.1);
+}
+
+.rephrase-btn:disabled {
+  color: var(--text-dimmer);
+  cursor: default;
+}
+
+.rephrase-btn.loading {
+  animation: pulse 1s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}

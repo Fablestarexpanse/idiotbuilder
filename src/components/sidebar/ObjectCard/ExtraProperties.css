@@ -1,0 +1,67 @@
+.extra-props {
+  margin-top: 6px;
+}
+
+.extra-props-toggle {
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  color: var(--text-dim);
+  font-size: 11px;
+  padding: 4px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.extra-props-toggle:hover {
+  color: var(--text);
+}
+
+.extra-props-body {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.obj-palette {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.obj-palette-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.obj-palette-label {
+  font-size: 11px;
+  color: var(--text-dim);
+  width: 60px;
+  text-transform: capitalize;
+}
+
+.obj-palette-hex {
+  font-size: 11px;
+  color: var(--text-dim);
+  font-family: monospace;
+}
+
+.extra-prop-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.extra-prop-row input {
+  width: auto;
+}
+
+.extra-props-actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}

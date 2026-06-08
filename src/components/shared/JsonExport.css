@@ -1,0 +1,22 @@
+.json-export-modal {
+  max-width: 700px;
+}
+
+.json-output {
+  font-family: "Consolas", "Fira Code", monospace;
+  font-size: 11px;
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 10px;
+  width: 100%;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.save-error {
+  color: var(--danger);
+  font-size: 11px;
+  margin-top: 8px;
+}

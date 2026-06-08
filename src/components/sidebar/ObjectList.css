@@ -1,0 +1,21 @@
+.object-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.add-object-btn {
+  width: 100%;
+  padding: 7px;
+  border-radius: 4px;
+  border: 1px dashed var(--border);
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.add-object-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
