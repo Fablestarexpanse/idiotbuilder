@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { usePromptStore } from "../../store/usePromptStore";
+import { DEFAULT_LM_BASE_URL } from "../../utils/constants";
+import "./SettingsModal.css";
 
 interface Props {
   onClose: () => void;
@@ -51,16 +53,15 @@ export function SettingsModal({ onClose }: Props) {
             type="text"
             value={baseUrl}
             onChange={(e) => setBaseUrl(e.target.value)}
-            placeholder="http://localhost:1234/v1/chat/completions"
+            placeholder={DEFAULT_LM_BASE_URL}
           />
         </div>
 
         <div className="field">
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
-            <label style={{ margin: 0 }}>Model</label>
+          <div className="settings-model-header">
+            <label>Model</label>
             <button
-              className="btn"
-              style={{ fontSize: 11, padding: "2px 8px" }}
+              className="btn settings-detect-btn"
               onClick={detect}
               disabled={detecting}
             >
@@ -73,7 +74,7 @@ export function SettingsModal({ onClose }: Props) {
             <select
               value={model}
               onChange={(e) => setModel(e.target.value)}
-              style={{ width: "100%" }}
+              className="settings-model-select"
             >
               {models.map((m) => (
                 <option key={m} value={m}>{m}</option>
@@ -89,7 +90,7 @@ export function SettingsModal({ onClose }: Props) {
           )}
 
           {detectError && (
-            <div style={{ fontSize: 11, color: "#e08080", marginTop: 4 }}>{detectError}</div>
+            <div className="settings-detect-error">{detectError}</div>
           )}
         </div>
 

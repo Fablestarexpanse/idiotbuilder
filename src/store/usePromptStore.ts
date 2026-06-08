@@ -10,6 +10,7 @@ import {
 } from "../types/prompt";
 import { ParsedPromptState } from "../utils/jsonBuilder";
 import { ASPECT_RATIO_PRESETS } from "../utils/aspectRatios";
+import { DEFAULT_LM_BASE_URL, DEFAULT_LM_MODEL } from "../utils/constants";
 
 interface PromptState {
   resolution: Resolution;
@@ -84,8 +85,8 @@ export const usePromptStore = create<PromptState>()(
       canvasBgImage: null,
       canvasBgOpacity: 0.4,
       lmSettings: {
-        baseUrl: "http://localhost:1234/v1/chat/completions",
-        model: "local-model",
+        baseUrl: DEFAULT_LM_BASE_URL,
+        model: DEFAULT_LM_MODEL,
       },
 
       setResolution: (r) => set({ resolution: r }),

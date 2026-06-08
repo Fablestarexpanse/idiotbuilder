@@ -1,0 +1,25 @@
+.settings-detect-error {
+  font-size: 11px;
+  color: var(--danger);
+  margin-top: 4px;
+}
+
+.settings-model-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.settings-model-header label {
+  margin: 0;
+}
+
+.settings-detect-btn {
+  font-size: 11px;
+  padding: 2px 8px;
+}
+
+.settings-model-select {
+  width: 100%;
+}
