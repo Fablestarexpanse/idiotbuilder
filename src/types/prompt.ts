@@ -32,3 +32,20 @@ export interface LmSettings {
   baseUrl: string;
   model: string;
 }
+
+/**
+ * Subset of store state that can be serialized to / deserialized from an
+ * Ideogram JSON file. Used by buildIdeogramJson and parseIdeogramJson as the
+ * shared contract so build and parse form a symmetric round-trip pair.
+ */
+export interface ParsedPromptState {
+  resolution: Resolution;
+  highLevelDescription: string;
+  aesthetics: string;
+  lighting: string;
+  photo: string;
+  medium: string;
+  colorPalette: string[];
+  background: string;
+  objects: PromptObject[];
+}

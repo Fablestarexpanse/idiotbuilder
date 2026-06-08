@@ -165,7 +165,7 @@ export function ObjectCard({ objectId, index }: Props) {
             <div className="global-palette-row">
               {(obj.colorPalette ?? []).map((hex, i) => (
                 <ColorSwatch
-                  key={i}
+                  key={`${hex}-${i}`}
                   color={hex}
                   onChange={(c) => updatePaletteColor(i, c)}
                   onRemove={() => removePaletteColor(i)}

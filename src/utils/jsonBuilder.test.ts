@@ -35,17 +35,17 @@ function build(
     background?: string;
   } = {},
 ) {
-  return buildIdeogramJson(
-    overrides.resolution ?? RES,
-    overrides.highLevelDescription ?? "",
-    overrides.aesthetics ?? "",
-    overrides.lighting ?? "",
-    overrides.photo ?? "",
-    overrides.medium ?? "",
-    overrides.colorPalette ?? [],
-    overrides.background ?? "",
+  return buildIdeogramJson({
+    resolution: overrides.resolution ?? RES,
+    highLevelDescription: overrides.highLevelDescription ?? "",
+    aesthetics: overrides.aesthetics ?? "",
+    lighting: overrides.lighting ?? "",
+    photo: overrides.photo ?? "",
+    medium: overrides.medium ?? "",
+    colorPalette: overrides.colorPalette ?? [],
+    background: overrides.background ?? "",
     objects,
-  );
+  });
 }
 
 // ---------------------------------------------------------------------------

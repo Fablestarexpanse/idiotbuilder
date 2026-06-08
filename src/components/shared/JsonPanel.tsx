@@ -1,27 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import { usePromptStore } from "../../store/usePromptStore";
-import { buildIdeogramJson, parseIdeogramJson } from "../../utils/jsonBuilder";
+import { useBuiltJson } from "../../store/useBuiltJson";
+import { parseIdeogramJson } from "../../utils/jsonBuilder";
 import "./JsonPanel.css";
 
 const DEBOUNCE_MS = 400;
 
 export function JsonPanel() {
-  const resolution = usePromptStore((s) => s.resolution);
-  const highLevelDescription = usePromptStore((s) => s.highLevelDescription);
-  const aesthetics = usePromptStore((s) => s.aesthetics);
-  const lighting = usePromptStore((s) => s.lighting);
-  const photo = usePromptStore((s) => s.photo);
-  const medium = usePromptStore((s) => s.medium);
-  const colorPalette = usePromptStore((s) => s.colorPalette);
-  const background = usePromptStore((s) => s.background);
-  const objects = usePromptStore((s) => s.objects);
   const loadState = usePromptStore((s) => s.loadState);
-
-  const builtJson = JSON.stringify(
-    buildIdeogramJson(resolution, highLevelDescription, aesthetics, lighting, photo, medium, colorPalette, background, objects),
-    null,
-    2,
-  );
+  const builtJson = useBuiltJson();
 
   const [localJson, setLocalJson] = useState(builtJson);
   const [parseError, setParseError] = useState<string | null>(null);

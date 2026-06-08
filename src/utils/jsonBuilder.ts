@@ -1,16 +1,7 @@
-import { PromptObject, Resolution } from "../types/prompt";
+import { ParsedPromptState, PromptObject, Resolution } from "../types/prompt";
 
-export interface ParsedPromptState {
-  resolution: Resolution;
-  highLevelDescription: string;
-  aesthetics: string;
-  lighting: string;
-  photo: string;
-  medium: string;
-  colorPalette: string[];
-  background: string;
-  objects: PromptObject[];
-}
+// Re-export ParsedPromptState for callers that imported it from here (backwards compat).
+export type { ParsedPromptState };
 
 // ---------------------------------------------------------------------------
 // Output types (internal — matches the LLM JSON schema)
@@ -73,17 +64,13 @@ function denormalizeBbox(
 // buildIdeogramJson
 // ---------------------------------------------------------------------------
 
-export function buildIdeogramJson(
-  resolution: Resolution,
-  highLevelDescription: string,
-  aesthetics: string,
-  lighting: string,
-  photo: string,
-  medium: string,
-  colorPalette: string[],
-  background: string,
-  objects: PromptObject[],
-): IdeogramOutput {
+/**
+ * Serialize store state to the Ideogram LLM JSON schema.
+ * Accepts a ParsedPromptState object so this function and parseIdeogramJson
+ * form a symmetric round-trip pair using the same type.
+ */
+export function buildIdeogramJson(state: ParsedPromptState): IdeogramOutput {
+  const { resolution, highLevelDescription, aesthetics, lighting, photo, medium, colorPalette, background, objects } = state;
   const sorted = [...objects].sort((a, b) => a.zIndex - b.zIndex);
 
   const elements: IdeogramElement[] = sorted.map((obj) => {
@@ -143,6 +130,9 @@ export function buildIdeogramJson(
 // Matches: TEXT: 'content' some desc. bbox=[x1,y1,x2,y2]
 const TEXT_DESC_RE = /^TEXT:\s*'([^']*)'\s*(.*?)\s*bbox=\[(\d+),(\d+),(\d+),(\d+)\]\s*$/s;
 
+/** Default resolution string used when none is present in the saved JSON. */
+const DEFAULT_RESOLUTION_STR = "896x1152";
+
 /**
  * Parse a saved Ideogram JSON file (or LLM output) back into prompt store state.
  * Handles both the new schema (style_description / elements) and the old schema
@@ -154,7 +144,7 @@ export function parseIdeogramJson(text: string): ParsedPromptState {
   const data = JSON.parse(text) as Record<string, unknown>;
 
   // Resolution
-  const resolutionStr = typeof data.resolution === "string" ? data.resolution : "896x1152";
+  const resolutionStr = typeof data.resolution === "string" ? data.resolution : DEFAULT_RESOLUTION_STR;
   const [w, h] = resolutionStr.split("x").map(Number);
   const resolution: Resolution = { width: w, height: h };
 
@@ -219,12 +209,21 @@ export function parseIdeogramJson(text: string): ParsedPromptState {
       };
     }
 
+    // Validate bbox shape — fallback to full-canvas bbox if malformed
+    const rawBbox = o.bbox;
+    const bbox: [number, number, number, number] =
+      Array.isArray(rawBbox) &&
+      rawBbox.length === 4 &&
+      rawBbox.every((v) => typeof v === "number")
+        ? (rawBbox as [number, number, number, number])
+        : [0, 0, w, h];
+
     return {
       id: crypto.randomUUID(),
       label: String(o.label ?? "obj"),
       type: "obj" as const,
       zIndex: Number(o["z-index"] ?? idx + 1),
-      bbox: (o.bbox as [number, number, number, number]) ?? [0, 0, w, h],
+      bbox,
       desc: rawDesc,
       colorPalette: elemPalette,
       extraProps: [],

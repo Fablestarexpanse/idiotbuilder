@@ -14,7 +14,7 @@ export function GlobalColorPalette() {
       <div className="global-palette-row">
         {colorPalette.map((hex, i) => (
           <ColorSwatch
-            key={i}
+            key={`${hex}-${i}`}
             color={hex}
             onChange={(c) => updateGlobalColor(i, c)}
             onRemove={() => removeGlobalColor(i)}

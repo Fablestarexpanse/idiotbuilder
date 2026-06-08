@@ -1,14 +1,13 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { v4 as uuidv4 } from "uuid";
 import {
   AspectRatioPreset,
   ExtraProperty,
   LmSettings,
+  ParsedPromptState,
   PromptObject,
   Resolution,
 } from "../types/prompt";
-import { ParsedPromptState } from "../utils/jsonBuilder";
 import { ASPECT_RATIO_PRESETS } from "../utils/aspectRatios";
 import { DEFAULT_LM_BASE_URL, DEFAULT_LM_MODEL } from "../utils/constants";
 
@@ -110,7 +109,7 @@ export const usePromptStore = create<PromptState>()(
       addObject: () =>
         set((s) => {
           const newObj: PromptObject = {
-            id: uuidv4(),
+            id: crypto.randomUUID(),
             label: `obj`,
             type: "obj",
             zIndex: s.objects.length + 1,
@@ -154,7 +153,7 @@ export const usePromptStore = create<PromptState>()(
         set((s) => ({
           objects: s.objects.map((o) =>
             o.id === objectId
-              ? { ...o, extraProps: [...o.extraProps, { id: uuidv4(), key: "", value: "" }] }
+              ? { ...o, extraProps: [...o.extraProps, { id: crypto.randomUUID(), key: "", value: "" }] }
               : o,
           ),
         })),
