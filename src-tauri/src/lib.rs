@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use std::time::Duration;
 
 #[derive(Serialize, Deserialize)]
 struct ChatMessage {
@@ -23,18 +24,24 @@ struct ChatResponse {
     choices: Vec<ChatChoice>,
 }
 
+/// Send a single-turn completion to an OpenAI-compatible endpoint.
+/// `system_prompt` controls the LLM's behaviour for the specific field being rephrased.
 #[tauri::command]
-async fn rephrase(prompt: String, base_url: String, model: String) -> Result<String, String> {
-    let client = reqwest::Client::new();
-
-    let system = "You are a creative writing assistant for AI image generation prompts. \
-                  Rephrase the given text to be more vivid, evocative, and specific. \
-                  Keep it concise (1-3 sentences). Return only the rephrased text, no preamble.";
+async fn rephrase(
+    prompt: String,
+    base_url: String,
+    model: String,
+    system_prompt: String,
+) -> Result<String, String> {
+    let client = reqwest::Client::builder()
+        .timeout(Duration::from_secs(30))
+        .build()
+        .map_err(|e| e.to_string())?;
 
     let body = ChatRequest {
         model,
         messages: vec![
-            ChatMessage { role: "system".into(), content: system.into() },
+            ChatMessage { role: "system".into(), content: system_prompt },
             ChatMessage { role: "user".into(), content: prompt },
         ],
         max_tokens: 300,
@@ -47,7 +54,12 @@ async fn rephrase(prompt: String, base_url: String, model: String) -> Result<Str
         .await
         .map_err(|e| e.to_string())?
         .error_for_status()
-        .map_err(|e| format!("LM Studio returned HTTP {}", e.status().map_or("error".to_string(), |s| s.to_string())))?;
+        .map_err(|e| {
+            format!(
+                "LM Studio returned HTTP {}",
+                e.status().map_or("error".to_string(), |s| s.to_string())
+            )
+        })?;
 
     let chat: ChatResponse = response.json().await.map_err(|e| e.to_string())?;
 
@@ -58,6 +70,32 @@ async fn rephrase(prompt: String, base_url: String, model: String) -> Result<Str
         .ok_or_else(|| "No response from LM Studio".into())
 }
 
+/// Ping the LM Studio models endpoint to check connectivity.
+/// Derives the /v1/models URL from the stored chat completions URL.
+/// Returns Ok(()) if reachable, Err(reason) if not.
+#[tauri::command]
+async fn ping_lm(base_url: String) -> Result<(), String> {
+    let client = reqwest::Client::builder()
+        .timeout(Duration::from_secs(3))
+        .build()
+        .map_err(|e| e.to_string())?;
+
+    // Derive the /v1/models URL from the stored chat-completions URL.
+    // Strategy: keep only scheme + host + port, then append /v1/models.
+    let mut parsed = reqwest::Url::parse(&base_url).map_err(|e| e.to_string())?;
+    parsed.set_path("/v1/models");
+    parsed.set_query(None);
+    let models_url = parsed.to_string();
+
+    client
+        .get(&models_url)
+        .send()
+        .await
+        .map_err(|e| e.to_string())?;
+
+    Ok(())
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -65,7 +103,7 @@ pub fn run() {
         .plugin(tauri_plugin_store::Builder::default().build())
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_fs::init())
-        .invoke_handler(tauri::generate_handler![rephrase])
+        .invoke_handler(tauri::generate_handler![rephrase, ping_lm])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

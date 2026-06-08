@@ -77,6 +77,12 @@
   border-top: 1px solid var(--border);
   padding: 8px 10px;
   display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.footer-actions {
+  display: flex;
   gap: 6px;
 }
 

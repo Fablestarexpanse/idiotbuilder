@@ -208,6 +208,10 @@ export const usePromptStore = create<PromptState>()(
     }),
     {
       name: "idiotbuilder-prompt",
+      // Bump version whenever the persisted shape changes to avoid crashes
+      // from stale localStorage data — Zustand will discard the old state
+      // and start fresh with defaults.
+      version: 2,
       // Never persist the image data URL — it can be hundreds of KB and
       // the object URL becomes invalid across sessions anyway.
       partialize: (s) => {

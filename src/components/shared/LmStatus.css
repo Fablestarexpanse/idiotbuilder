@@ -1,0 +1,49 @@
+.lm-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  padding: 3px 6px;
+  border-radius: 4px;
+  transition: background 0.15s;
+  user-select: none;
+}
+
+.lm-status:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.lm-status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  transition: background 0.4s;
+}
+
+.lm-status-dot--connected {
+  background: #4ade80;
+  box-shadow: 0 0 5px #4ade8088;
+}
+
+.lm-status-dot--disconnected {
+  background: #f87171;
+  box-shadow: 0 0 5px #f8717188;
+}
+
+.lm-status-dot--checking {
+  background: #facc15;
+  box-shadow: 0 0 5px #facc1588;
+  animation: lm-pulse 1s ease-in-out infinite;
+}
+
+@keyframes lm-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.lm-status-label {
+  font-size: 10px;
+  color: var(--text-dimmer);
+  white-space: nowrap;
+}

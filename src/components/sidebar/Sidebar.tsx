@@ -8,6 +8,7 @@ import { MediumInput } from "./MediumInput";
 import { GlobalColorPalette } from "./GlobalColorPalette";
 import { BackgroundInput } from "./BackgroundInput";
 import { ObjectList } from "./ObjectList";
+import { LmStatus } from "../shared/LmStatus";
 import "./Sidebar.css";
 
 interface Props {
@@ -39,8 +40,11 @@ export function Sidebar({ onOpenSettings, onOpenExport }: Props) {
       </div>
 
       <div className="sidebar-footer">
-        <button className="footer-btn" title="Export JSON" onClick={onOpenExport}>↗ Export JSON</button>
-        <button className="footer-btn" title="Settings" onClick={onOpenSettings}>⚙ Settings</button>
+        <LmStatus />
+        <div className="footer-actions">
+          <button className="footer-btn" title="Export JSON" onClick={onOpenExport}>↗ Export JSON</button>
+          <button className="footer-btn" title="Settings" onClick={onOpenSettings}>⚙ Settings</button>
+        </div>
       </div>
     </div>
   );
