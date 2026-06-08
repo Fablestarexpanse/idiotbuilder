@@ -1,10 +1,13 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { usePromptStore } from "../../store/usePromptStore";
 import { useBuiltJson } from "../../store/useBuiltJson";
 import { parseIdeogramJson } from "../../utils/jsonBuilder";
 import "./JsonPanel.css";
 
 const DEBOUNCE_MS = 400;
+const MIN_WIDTH = 200;
+const MAX_WIDTH = 800;
+const DEFAULT_WIDTH = 280;
 
 export function JsonPanel() {
   const loadState = usePromptStore((s) => s.loadState);
@@ -14,12 +17,14 @@ export function JsonPanel() {
   const [parseError, setParseError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [copyError, setCopyError] = useState(false);
+  const [panelWidth, setPanelWidth] = useState(DEFAULT_WIDTH);
 
-  // Tracks whether the user is actively editing so we don't overwrite their work
   const isEditingRef = useRef(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const gutterRef = useRef<HTMLDivElement>(null);
+  const dragStartX = useRef<number | null>(null);
+  const dragStartWidth = useRef<number>(DEFAULT_WIDTH);
 
   // Sync store → textarea whenever a sidebar field changes and user isn't editing
   useEffect(() => {
@@ -47,13 +52,11 @@ export function JsonPanel() {
   function handleBlur() {
     isEditingRef.current = false;
     if (parseError) {
-      // Revert to last known-good state
       setLocalJson(builtJson);
       setParseError(null);
     }
   }
 
-  // Keep gutter scroll in sync with textarea scroll
   function handleScroll() {
     if (gutterRef.current && textareaRef.current) {
       gutterRef.current.scrollTop = textareaRef.current.scrollTop;
@@ -71,10 +74,41 @@ export function JsonPanel() {
     }
   }
 
+  // ── Resize drag handle ──────────────────────────────────────────────────────
+
+  const onMouseMove = useCallback((e: MouseEvent) => {
+    if (dragStartX.current === null) return;
+    // Dragging left = larger panel (panel is on the right edge)
+    const delta = dragStartX.current - e.clientX;
+    const next = Math.min(MAX_WIDTH, Math.max(MIN_WIDTH, dragStartWidth.current + delta));
+    setPanelWidth(next);
+  }, []);
+
+  const onMouseUp = useCallback(() => {
+    dragStartX.current = null;
+    document.body.style.cursor = "";
+    document.body.style.userSelect = "";
+    window.removeEventListener("mousemove", onMouseMove);
+    window.removeEventListener("mouseup", onMouseUp);
+  }, [onMouseMove]);
+
+  function handleResizeMouseDown(e: React.MouseEvent) {
+    e.preventDefault();
+    dragStartX.current = e.clientX;
+    dragStartWidth.current = panelWidth;
+    document.body.style.cursor = "col-resize";
+    document.body.style.userSelect = "none";
+    window.addEventListener("mousemove", onMouseMove);
+    window.addEventListener("mouseup", onMouseUp);
+  }
+
   const lineCount = localJson.split("\n").length;
 
   return (
-    <div className="json-panel">
+    <div className="json-panel" style={{ width: panelWidth, minWidth: panelWidth }}>
+      {/* Drag handle on the left edge */}
+      <div className="json-resize-handle" onMouseDown={handleResizeMouseDown} title="Drag to resize" />
+
       <div className="json-panel-header">
         <span className="json-panel-title">JSON Output</span>
         <div style={{ display: "flex", alignItems: "center", gap: 6 }}>

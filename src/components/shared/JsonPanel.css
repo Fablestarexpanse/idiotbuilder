@@ -1,12 +1,30 @@
 .json-panel {
-  width: 280px;
-  min-width: 280px;
+  /* width is set inline via state */
   background: var(--sidebar-bg);
   border-left: 1px solid var(--border);
   display: flex;
   flex-direction: column;
   height: 100vh;
   overflow: hidden;
+  position: relative;
+  flex-shrink: 0;
+}
+
+/* Invisible grab strip that sits over the left border */
+.json-resize-handle {
+  position: absolute;
+  left: -4px;
+  top: 0;
+  width: 8px;
+  height: 100%;
+  cursor: col-resize;
+  z-index: 10;
+}
+
+.json-resize-handle:hover,
+.json-resize-handle:active {
+  background: var(--accent);
+  opacity: 0.35;
 }
 
 .json-panel-header {
